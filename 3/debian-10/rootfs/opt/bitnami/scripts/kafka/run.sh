@@ -25,11 +25,14 @@ fi
 
 flags=("$KAFKA_CONF_FILE")
 [[ -z "${KAFKA_EXTRA_FLAGS:-}" ]] || flags=("${flags[@]}" "${KAFKA_EXTRA_FLAGS[@]}")
-START_COMMAND=("$KAFKA_HOME/bin/kafka-server-start.sh" "${flags[@]}" "$@")
+export KAFKA_OPTS="-javaagent:/jmx_prometheus_javaagent-0.16.1.jar=7071:/kafka-2_0_0.yml"
+export KAFKA_HEAP_OPTS="-Xmx1000M -Xms1000M"
+START_COMMAND=("KAFKA_HEAP_OPTS=${KAFKA_HEAP_OPTS} KAFKA_OPTS=${KAFKA_OPTS} '$KAFKA_HOME/bin/kafka-server-start.sh'" "${flags[@]}" "$@")
 
 info "** Starting Kafka **"
 if am_i_root; then
     exec gosu "$KAFKA_DAEMON_USER" "${START_COMMAND[@]}"
 else
-    exec "${START_COMMAND[@]}"
+    #exec "${START_COMMAND[@]}"
+    KAFKA_HEAP_OPTS=${KAFKA_HEAP_OPTS} KAFKA_OPTS=${KAFKA_OPTS} $KAFKA_HOME/bin/kafka-server-start.sh "${flags[@]}" "$@"
 fi

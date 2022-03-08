@@ -25,6 +25,7 @@ fi
 
 flags=("$KAFKA_CONF_FILE")
 [[ -z "${KAFKA_EXTRA_FLAGS:-}" ]] || flags=("${flags[@]}" "${KAFKA_EXTRA_FLAGS[@]}")
+export KAFKA_OPTS="${KAFKA_OPTS:-javaagent:/jmx_prometheus_javaagent-0.16.1.jar=7072:/kafka-2_0_0.yml}"
 START_COMMAND=("$KAFKA_HOME/bin/kafka-server-start.sh" "${flags[@]}" "$@")
 
 info "** Starting Kafka **"

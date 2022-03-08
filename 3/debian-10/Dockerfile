@@ -21,6 +21,8 @@ RUN ln -s /opt/bitnami/scripts/kafka/entrypoint.sh /entrypoint.sh
 RUN ln -s /opt/bitnami/scripts/kafka/run.sh /run.sh
 
 COPY rootfs /
+COPY prometheus-files/jmx_prometheus_javaagent-0.16.1.jar /
+COPY prometheus-files/kafka-2_0_0.yml / 
 RUN /opt/bitnami/scripts/java/postunpack.sh
 RUN /opt/bitnami/scripts/kafka/postunpack.sh
 ENV BITNAMI_APP_NAME="kafka" \
